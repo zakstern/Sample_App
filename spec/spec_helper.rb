@@ -45,12 +45,14 @@ Spork.prefork do
     #     --seed 1234
     config.order = "random"
     config.include Capybara::DSL
+    config.include Rails.application.routes.url_helpers
   end
 
 end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
+
 
 end
 
@@ -124,4 +126,5 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
   config.include Capybara::DSL
+  config.include Rails.application.routes.url_helpers
 end
