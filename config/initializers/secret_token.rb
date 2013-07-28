@@ -1,4 +1,4 @@
-## Be sure to restart your server when you modify this file.
+# Be sure to restart your server when you modify this file.
 
 # Your secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
@@ -9,20 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-
-#require 'securerandom'
-
-def secure_token
-  token_file = Rails.root.join('.secret')
-  if File.exist?(token_file)
-    # Use the existing token.
-    File.read(token_file).chomp
-  else
-    # Generate a new token and store it in token_file.
-    token = SecureRandom.hex(64)
-    File.write(token_file, token)
-    token
-  end
-end
-
-SampleApp::Application.config.secret_token = secure_token
+SampleApp::Application.config.secret_key_base = '2e491ffce0f34988fbd55176ee98a0436d748c4b8b4a9c34de289cbc463538c148d070aaaf85b3c77edf7e854b5101b1364519dc4174718aeb7c6f023880a927'
