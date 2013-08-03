@@ -19,7 +19,7 @@ describe "Authentication" do
 
       it { should have_title('Sign in') }
       it { should have_error_message('Invalid') }
-
+    
       describe "after visiting another page" do
         before { click_link "Home" }
         it { should_not have_selector('div.alert.alert-error') }
@@ -40,6 +40,9 @@ describe "Authentication" do
       describe "followed by signout" do
         before { click_link "Sign out" }
         it { should have_link('Sign in') }
+        it { should_not have_link('Profile',     href: user_path(user)) }
+        it { should_not have_link('Settings',    href: edit_user_path(user)) }
+        it { should_not have_link('Sign out',    href: signout_path) }
       end
     end
   end
@@ -52,9 +55,7 @@ describe "Authentication" do
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
-          fill_in "Email",    with: user.email
-          fill_in "Password", with: user.password
-          click_button "Sign in"
+          sign_in user
         end
 
         describe "after signing in" do
