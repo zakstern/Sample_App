@@ -101,6 +101,7 @@ describe "User pages" do
       end
     end
   end
+
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
     before do
@@ -147,4 +148,19 @@ describe "User pages" do
       specify { expect(user.reload).not_to be_admin }
     end
   end
+
+  describe "for signed in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+
+      describe "using a 'new' action" do
+        before { get new_user_path }
+        specify { response.should redirect_to(root_path) }
+      end
+
+      describe "using a 'create' action" do
+        before { post users_path }
+        specify { response.should redirect_to(root_path) }
+      end         
+  end 
 end
