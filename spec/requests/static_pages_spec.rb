@@ -31,6 +31,24 @@ describe "Static pages" do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "it should pluralize one post correctly" do
+        let(:newuser) { FactoryGirl.create(:user) }
+        before do 
+          FactoryGirl.create(:micropost, user: newuser, content: "Lorem ipsum")
+          sign_in newuser
+          visit root_path
+        end
+        it {should have_selector('span', text: "1 micropost")} 
+
+        describe "after adding micropost it should pluralize two correctly" do
+          before do 
+            FactoryGirl.create(:micropost, user: newuser, content: "Dolor sit amet")
+            visit root_path
+          end
+          it {should have_selector('span', text: "2 microposts")}
+        end
+      end
     end
   end
 
