@@ -34,19 +34,38 @@ describe "Static pages" do
 
       describe "it should pluralize one post correctly" do
         let(:newuser) { FactoryGirl.create(:user) }
+        
         before do 
           FactoryGirl.create(:micropost, user: newuser, content: "Lorem ipsum")
           sign_in newuser
           visit root_path
         end
+
         it {should have_selector('span', text: "1 micropost")} 
 
         describe "after adding micropost it should pluralize two correctly" do
+          
           before do 
             FactoryGirl.create(:micropost, user: newuser, content: "Dolor sit amet")
             visit root_path
           end
+
           it {should have_selector('span', text: "2 microposts")}
+
+        end
+      end
+
+      describe "pagination" do
+        it "should paginate the feed" do
+          30.times { FactoryGirl.create(:micropost, user: user, content: "Consectetur adipiscing elit") }
+          visit root_path
+          page.should have_selector("div.pagination")  
+        end
+
+        it "should list each user" do
+          user.microposts.paginate(page: 1).each do |micropost|
+            expect(page).to have_selector('li', text: micropost.content)
+          end
         end
       end
     end
