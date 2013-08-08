@@ -32,7 +32,18 @@ describe "Static pages" do
         end
       end
 
-      describe "it should pluralize one post correctly" do
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
+
+      describe "pluralize one post correctly" do
         let(:newuser) { FactoryGirl.create(:user) }
         
         before do 
@@ -43,7 +54,7 @@ describe "Static pages" do
 
         it {should have_selector('span', text: "1 micropost")} 
 
-        describe "after adding micropost it should pluralize two correctly" do
+        describe "pluralize two posts correctly" do
           
           before do 
             FactoryGirl.create(:micropost, user: newuser, content: "Dolor sit amet")
