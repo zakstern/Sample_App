@@ -76,24 +76,7 @@ describe "Authentication" do
             it "should render the default (profile) page" do
               expect(page).to have_title(user.name)
             end
-          end
-          
-          describe "using a 'new' action" do
-            before do
-              delete signout_path
-              visit signin_path
-              fill_in "Email",    with: user.email
-              fill_in "Password", with: user.password
-              click_button "Sign in"
-            end
-            before { get new_user_path }
-            specify { expect(response).to redirect_to(root_path) }
-          end
-
-          describe "using a 'create' action" do
-            before { post users_path }
-            specify { expect(response).to redirect_to(root_path) }
-          end         
+          end  
         end
       end
 
@@ -133,6 +116,18 @@ describe "Authentication" do
 
         describe "submitting to the destroy action" do
           before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
+      
+      describe "in the Relationships controller" do
+        describe "submitting to the create action" do
+          before { post relationships_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete relationship_path(1) }
           specify { expect(response).to redirect_to(signin_path) }
         end
       end
@@ -177,5 +172,20 @@ describe "Authentication" do
         end
       end
     end  
+
+    describe "as a signed in user" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user, no_capybara: true  }
+      
+      describe "using a 'new' action" do
+        before { get new_user_path }
+        specify { expect(response).to redirect_to(root_path) }
+      end
+
+      describe "using a 'create' action" do
+        before { post users_path }
+        specify { expect(response).to redirect_to(root_path) }
+      end
+    end       
   end
 end
